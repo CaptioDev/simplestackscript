@@ -11,7 +11,7 @@ def main():
     )
 
     parser.add_argument(
-        "-v", "--version", action="version", version="%(prog)s 0.2.2"  # Replace 0.2.2 with your version
+        "-v", "--version", action="version", version="%(prog)s 0.2.3"
     )
 
     parser.add_argument("filename", nargs="?", help="The S3 script file to execute (optional).")
