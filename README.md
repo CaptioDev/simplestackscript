@@ -15,5 +15,5 @@ S3 (Simple Stack Script) is a lightweight, stack-based programming language desi
 ## 📥 Installation  
 Clone the repository:  
 ```sh
-git clone https://github.com/CaptioDev/Simple-Stack-Script-S3-.git
-cd Simple-Stack-Script-S3-
+git clone https://github.com/CaptioDev/simplestackscript.git
+cd simplestackscript
