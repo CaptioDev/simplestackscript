@@ -1,0 +1,11 @@
+LICENSE
+README.md
+setup.py
+simplestackscript/__init__.py
+simplestackscript/interpreter.py
+simplestackscript/s3.py
+simplestackscript.egg-info/PKG-INFO
+simplestackscript.egg-info/SOURCES.txt
+simplestackscript.egg-info/dependency_links.txt
+simplestackscript.egg-info/entry_points.txt
+simplestackscript.egg-info/top_level.txt
