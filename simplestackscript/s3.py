@@ -1,8 +1,8 @@
-#!/usr/bin/env python3
-
+# s3_package/s3.py
+import argparse
 import os
 import sys
-import argparse
+from .interpreter import Interpreter
 
 def main():
     parser = argparse.ArgumentParser(
@@ -11,7 +11,7 @@ def main():
     )
 
     parser.add_argument(
-        "-v", "--version", action="version", version="%(prog)s 0.2.3"
+        "-v", "--version", action="version", version="%(prog)s 0.2.4"
     )
 
     parser.add_argument("filename", nargs="?", help="The S3 script file to execute (optional).")
@@ -27,18 +27,26 @@ def main():
 
     if args.filename:
         filename = args.filename
+
+        if not filename.endswith(".s3"): # Check file extension
+            print("Error: Unknown file extension.", file=sys.stderr)
+            exit(1)
+
         try:
-            # Run the interpreter with the given program as argument
-            os.execlp("python3", "python3", interpreter_path, filename)  # Pass filename directly
+            with open(filename, "r") as f:
+                code = f.read()
+                interpreter = Interpreter()
+                interpreter.run(code)
         except FileNotFoundError:
-            print(f"Error: File '{filename}' not found.", file=sys.stderr)  # Print to stderr
-            exit(1) # Exit with an error code
+            print(f"Error: File '{filename}' not found.", file=sys.stderr)
+            exit(1)
         except Exception as e:
-            print(f"An error occurred: {e}", file=sys.stderr)  # Print to stderr
-            exit(1) # Exit with an error code
+            print(f"An error occurred: {e}", file=sys.stderr)
+            exit(1)
 
     else:
         parser.print_help()
+
 
 if __name__ == "__main__":
     main()

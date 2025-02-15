@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='simplestackscript',
-    version='0.2.3',
+    version='0.2.4',
     packages=find_packages(), # find all packages in the current directory
     entry_points={
         'console_scripts': [
