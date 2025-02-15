@@ -1,8 +1,10 @@
 # S3 - Simple Stack Script 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/release/python-390/) [![Built with Python](https://img.shields.io/badge/Built_With-Python-blue)](https://www.python.org) [![CodeQL](https://github.com/CaptioDev/simplestackscript/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/CaptioDev/simplestackscript/actions/workflows/github-code-scanning/codeql) [![GitHub last commit](https://img.shields.io/github/last-commit/CaptioDev/simplestackscript)](https://github.com/CaptioDev/simplestackscript/commits/main) 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/release/python-390/) [![Built with Python](https://img.shields.io/badge/Built_With-Python-blue)](https://www.python.org) [![PyPI version](https://img.shields.io/pypi/v/simplestackscript)](https://pypi.org/project/simplestackscript/) [![CodeQL](https://github.com/CaptioDev/simplestackscript/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/CaptioDev/simplestackscript/actions/workflows/github-code-scanning/codeql) [![GitHub last commit](https://img.shields.io/github/last-commit/CaptioDev/simplestackscript)](https://github.com/CaptioDev/simplestackscript/commits/main) 
 
 
 S3 (Simple Stack Script) is a lightweight, stack-based programming language designed for simplicity and power. It combines stack-based execution with variable support, making it an excellent choice for scripting, automation, and embedded systems.
+
+## Important: We are now an officially published Python package!!! 
 
 ## 🚀 Features
 
@@ -12,10 +14,19 @@ S3 (Simple Stack Script) is a lightweight, stack-based programming language desi
 -   **Control Flow:** Supports conditionals and loops.
 -   **Function Support:** Define and reuse stack-based functions.
 -   **Minimal & Fast:** Designed for lightweight execution.
+-   **Published Python Package:** You can find our package as [simplestackscript on PyPI.](https://pypi.org/project/simplestackscript/)
 
 ---
 
 ## 📥 Installation
+
+
+```bash
+pip install simplestackscript
+```
+
+This is the easiest way to install S3.  pip will automatically download and install the latest version from PyPI.
+If you would rather install from source, follow the instructions below:
 
 1.  **Clone the repository:**
 
@@ -114,11 +125,8 @@ READ
 PRINT "You entered:"
 PRINT.TOP
 HALT
+```
 
 💡 Contributing
 
 Contributions are welcome! Please open an issue or submit a pull request.
-
-📄 License
-
-[MIT License]
