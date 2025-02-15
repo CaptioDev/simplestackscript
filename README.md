@@ -1,4 +1,6 @@
-# S3 - Simple Stack Script
+# S3 - Simple Stack Script 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/release/python-390/) [![CodeQL](https://github.com/CaptioDev/simplestackscript/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/CaptioDev/simplestackscript/actions/workflows/github-code-scanning/codeql)
+
 
 S3 (Simple Stack Script) is a lightweight, stack-based programming language designed for simplicity and power. It combines stack-based execution with variable support, making it an excellent choice for scripting, automation, and embedded systems.
 
