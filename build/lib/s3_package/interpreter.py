@@ -110,8 +110,7 @@ while program[pc] != "HALT":
         a = stack.pop()
         b = stack.pop()
 
-        result = a - b
-        stack.push(-result)
+        stack.push(b - a)
     elif opcode == "MUL":
         a = stack.pop()
         b = stack.pop()
@@ -121,7 +120,7 @@ while program[pc] != "HALT":
         a = stack.pop()
         b = stack.pop()
 
-        stack.push(a // b)
+        stack.push(b / a)
     elif opcode == "PRINT":
         string_literal = program[pc]
         pc += 1
