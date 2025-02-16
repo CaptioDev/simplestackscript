@@ -36,9 +36,6 @@ If you would rather install from source, follow the instructions below:
     cd simplestackscript
     ```
 
-    > [!NOTE]
-    > You can also clone the repository using SSH and your GitHub Public Key by replacing the first line with `git clone git@github.com:CaptioDev/simplestackscript.git`
-
 2.  **Install the interpreter:**
 
     ```bash
@@ -50,6 +47,9 @@ If you would rather install from source, follow the instructions below:
     ```bash
     s3 my_program.s3
     ```
+
+> [!NOTE]
+> You can also clone the repository using SSH and your GitHub Public Key by replacing the first line with in the first step to: `git clone git@github.com:CaptioDev/simplestackscript.git`
 
 ---
 
