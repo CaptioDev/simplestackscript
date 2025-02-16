@@ -20,6 +20,7 @@ S3 (Simple Stack Script) is a lightweight, stack-based programming language desi
 
 ## 📥 Installation
 
+If you are reading this on PyPI, please use the first installation choice below:
 
 ```bash
 pip install simplestackscript

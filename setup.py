@@ -1,13 +1,18 @@
 from setuptools import setup, find_packages
 
+with open("README.md", "r") as f:
+    long_description = f.read()
+
 setup(
     name='simplestackscript',
-    version='0.2.8',
-    packages=find_packages(), # find all packages in the current directory
+    version='0.2.9',
+    packages=find_packages(),
     entry_points={
         'console_scripts': [
-            's3 = s3_package.s3:main', # call the main function in the script
+            's3 = s3_package.s3:main',
         ],
     },
     install_requires=[],
+    long_description=long_description,  # Use README.md as long description
+    long_description_content_type="text/markdown",  # Important: Specify Markdown format
 )
