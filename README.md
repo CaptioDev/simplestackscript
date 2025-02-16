@@ -49,7 +49,7 @@ If you would rather install from source, follow the instructions below:
     ```
 
 > [!NOTE]
-> You can also clone the repository using SSH and your GitHub Public Key by replacing the first line with in the first step to: `git clone git@github.com:CaptioDev/simplestackscript.git`
+> You can also clone the repository using SSH and your GitHub Public Key by replacing the first line within the first step to: `git clone git@github.com:CaptioDev/simplestackscript.git`
 
 ---
 
