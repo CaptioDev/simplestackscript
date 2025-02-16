@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: simplestackscript
-Version: 0.2.9
+Version: 0.2.10
 Summary: UNKNOWN
 Home-page: UNKNOWN
 License: UNKNOWN
@@ -113,21 +113,6 @@ PUSH 5
 PUSH 10
 ADD
 PRINT.TOP  # Output: 15
-HALT
-
-# Example: Loop and print numbers from 0 to 9
-PUSH 0
-LOOP_START:
-  DUP
-  PRINT.TOP
-  PUSH 1
-  ADD
-  DUP
-  PUSH 10
-  SUB
-  JUMP.IF.0 LOOP_END
-  JUMP.IF.POS LOOP_START
-LOOP_END:
 HALT
 
 # Example: Input and output

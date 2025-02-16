@@ -105,21 +105,6 @@ ADD
 PRINT.TOP  # Output: 15
 HALT
 
-# Example: Loop and print numbers from 0 to 9
-PUSH 0
-LOOP_START:
-  DUP
-  PRINT.TOP
-  PUSH 1
-  ADD
-  DUP
-  PUSH 10
-  SUB
-  JUMP.IF.0 LOOP_END
-  JUMP.IF.POS LOOP_START
-LOOP_END:
-HALT
-
 # Example: Input and output
 PRINT "Enter a number:"
 READ
