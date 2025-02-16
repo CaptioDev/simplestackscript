@@ -5,7 +5,7 @@ with open("README.md", "r") as f:
 
 setup(
     name='simplestackscript',
-    version='1.0.0-dev1',
+    version='1.0.0-dev2',
     packages=find_packages(),
     entry_points={
         'console_scripts': [

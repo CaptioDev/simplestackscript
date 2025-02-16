@@ -7,11 +7,11 @@ import argparse
 def main():
     parser = argparse.ArgumentParser(
         description="Run an S3 script.",
-        epilog="For more information, see the README or the project's GitHub page or on PyPI."
+        epilog="For more information, see the README or the project's GitHub page or on PyPI. This is a development version.",
     )
 
     parser.add_argument(
-        "-v", "--version", action="version", version="%(prog)s 0.2.10"
+        "-v", "--version", action="version", version="%(prog)s v1.0.0-dev2"
     )
 
     parser.add_argument("filename", nargs="?", help="The S3 script file to execute (optional).")

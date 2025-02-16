@@ -23,6 +23,10 @@ for line in program_lines:
     if opcode == "":
         continue
 
+    # check for comments
+    if opcode == "#":
+        continue
+
     # check if opcode is a label
     if opcode.endswith(":"):
         label_tracker[opcode[:-1]] = token_counter
