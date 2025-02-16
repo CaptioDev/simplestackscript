@@ -1,4 +1,5 @@
 import sys
+from time import sleep
 
 # read filepath
 program_filepath = sys.argv[1]
@@ -15,6 +16,7 @@ with open(program_filepath, 'r') as program_file:
 program = []
 token_counter = 0
 label_tracker = {}
+
 for line in program_lines:
     parts = line.split(" ")
     opcode = parts[0]
@@ -55,6 +57,11 @@ for line in program_lines:
         program.append(line_number)
         program.append(repeat_count)
         token_counter += 2
+    elif opcode == "WAIT":
+        # expects a number
+        number = int(parts[1])
+        program.append(number)
+        token_counter += 1
 
 ###########################
 #     Interpretation      #
@@ -190,3 +197,7 @@ while program[pc] != "HALT":
         stack.push(a)
     elif opcode == "PRINT.TOP":
         print(stack.top())
+    elif opcode == "WAIT":
+        number = program[pc]
+        pc += 1
+        sleep(number)
