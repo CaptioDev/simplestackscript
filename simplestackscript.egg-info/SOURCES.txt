@@ -1,9 +1,9 @@
 LICENSE
 README.md
 setup.py
-simplestackscript/__init__.py
-simplestackscript/interpreter.py
-simplestackscript/s3.py
+s3_package/__init__.py
+s3_package/interpreter.py
+s3_package/s3.py
 simplestackscript.egg-info/PKG-INFO
 simplestackscript.egg-info/SOURCES.txt
 simplestackscript.egg-info/dependency_links.txt

@@ -110,7 +110,8 @@ while program[pc] != "HALT":
         a = stack.pop()
         b = stack.pop()
 
-        stack.push(a - b)
+        result = a - b
+        stack.push(-result)
     elif opcode == "MUL":
         a = stack.pop()
         b = stack.pop()
@@ -127,8 +128,12 @@ while program[pc] != "HALT":
 
         print(string_literal)
     elif opcode == "READ":
-        number = int(input())
-        stack.push(number)
+        try:
+            value = int(input())  # Read input INSIDE the READ instruction
+            stack.push(value)
+        except ValueError:
+            print("Error: Invalid input. Must be an integer.", file=sys.stderr)
+            exit(1)
     elif opcode == "JUMP.IF.0":
         number = stack.top()
         if number == 0:
@@ -187,4 +192,3 @@ while program[pc] != "HALT":
         stack.push(a)
     elif opcode == "PRINT.TOP":
         print(stack.top())
-    
