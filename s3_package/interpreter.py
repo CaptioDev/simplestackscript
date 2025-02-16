@@ -88,7 +88,7 @@ class Stack:
     
 
 pc = 0
-stack = Stack(512)
+stack = Stack(256)
 
 while program[pc] != "HALT":
     opcode = program[pc]
