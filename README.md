@@ -29,12 +29,15 @@ pip install simplestackscript
 This is the easiest way to install S3.  pip will automatically download and install the latest version from PyPI.
 If you would rather install from source, follow the instructions below:
 
-1.  **Clone the repository:**
+1.  **Clone the repository with HTTPS:**
 
     ```bash
-    git clone [https://github.com/CaptioDev/simplestackscript.git](https://github.com/CaptioDev/simplestackscript.git)
+    git clone https://github.com/CaptioDev/simplestackscript.git
     cd simplestackscript
     ```
+
+    > [!NOTE]
+    > You can also clone the repository using SSH and your GitHub Public Key by replacing the first line with `git clone git@github.com:CaptioDev/simplestackscript.git`
 
 2.  **Install the interpreter:**
 
