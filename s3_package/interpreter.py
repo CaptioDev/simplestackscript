@@ -18,15 +18,16 @@ token_counter = 0
 label_tracker = {}
 
 for line in program_lines:
+
     parts = line.split(" ")
     opcode = parts[0]
 
+    # check for comments (rudimentary)
+    if "#" in parts:
+        parts = line.partition("#")[0].split(" ")
+
     # check for empty line
     if opcode == "":
-        continue
-
-    # check for comments
-    if opcode == "#":
         continue
 
     # check if opcode is a label
