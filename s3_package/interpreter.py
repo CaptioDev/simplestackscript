@@ -37,38 +37,54 @@ for line in program_lines:
     program.append(opcode)
     token_counter += 1
 
-    # handle opcodes
+    # Handle opcodes
     if opcode == "PUSH":
-        # expects a number
-        number = int(line_parts[1])
-        program.append(number)
-        token_counter += 1
+        # Expects a number
+        try:
+            number = int(line_parts[1])
+            program.append(number)
+            token_counter += 1
+        except (IndexError, ValueError):
+            raise ValueError(f"Invalid number in PUSH: {line}")
 
     elif opcode == "PRINT":
-        # expects a string literal
-        string_literal = ' '.join(line_parts[1:])[1:-1]
-        program.append(string_literal)
-        token_counter += 1
+        # Expects a string literal
+        raw_string = ' '.join(line_parts[1:]).strip()
+        if (raw_string.startswith('"') and raw_string.endswith('"')) or \
+           (raw_string.startswith("'") and raw_string.endswith("'")):
+            string_literal = raw_string[1:-1]  # Remove quotes
+            program.append(string_literal)
+            token_counter += 1
+        else:
+            raise ValueError(f"Invalid string literal in PRINT: {line}")
 
     elif opcode in ["JUMP", "JUMP.IF.0", "JUMP.IF.POS"]:
-        # expects a label
+        # Expects a label
         label = line_parts[1]
+        if label not in label_tracker:
+            raise ValueError(f"Undefined label '{label}' in {opcode}")
         program.append(label)
         token_counter += 1
 
     elif opcode == "LOOP":
-        # expects a line number and a repeat count
-        line_number = int(line_parts[1])
-        repeat_count = int(line_parts[2])
-        program.append(line_number)
-        program.append(repeat_count)
-        token_counter += 2
+        # Expects a line number and a repeat count
+        try:
+            line_number = int(line_parts[1])
+            repeat_count = int(line_parts[2])
+            program.append(line_number)
+            program.append(repeat_count)
+            token_counter += 2
+        except (IndexError, ValueError):
+            raise ValueError(f"Invalid LOOP format: {line}")
 
     elif opcode == "WAIT":
-        # expects a number
-        number = int(line_parts[1])
-        program.append(number)
-        token_counter += 1
+        # Expects a number
+        try:
+            number = int(line_parts[1])
+            program.append(number)
+            token_counter += 1
+        except (IndexError, ValueError):
+            raise ValueError(f"Invalid number in WAIT: {line}")
 
 ###########################
 #     Interpretation      #
