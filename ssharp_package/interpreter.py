@@ -1,62 +1,63 @@
+# Import libraries
 import sys
 from time import sleep
 
-# read filepath
+# Take the filepath from the argument when running this script
 program_filepath = sys.argv[1]
 
-###########################
-#      Tokenization       #
-###########################
+##################################################
+#                  Tokenization                  #
+##################################################
 
-# read file line-by-line
+# Read the file line by line
 program_lines = []
 with open(program_filepath, 'r') as program_file:
     program_lines = [line.strip() for line in program_file.readlines()]
 
-program = []
-token_counter = 0
-label_tracker = {}
+program = []                                        # Stores program tokens
+token_counter = 0                                   # Stores the number of tokens
+label_tracker = {}                                  # Stores the token place of labels
 
-for line in program_lines:
+for line in program_lines:                          # Go through each line of the program
 
-    # Remove comments
-    line = line.split("#", 1)[0].strip()
+    line = line.split("#", 1)[0].strip()            # Remove the comments from every line
     
-    if not line:
-        continue  # Skip empty lines
-
-    line_parts = line.split(" ")
-    opcode = line_parts[0]
-
-    # Check if opcode is a label
-    if opcode.endswith(":"):
-        label_tracker[opcode[:-1]] = token_counter
+    if not line:                                    # Remove all empty lines
         continue
 
-    # store opcode token
-    program.append(opcode)
+    line_parts = line.split(" ")                    # Split the line by spaces
+    opcode = line_parts[0]                          # Define the opcode as the first part of the line
+
+    if opcode.endswith(":"):
+        label_tracker[opcode[:-1]] = token_counter                           # Store the label and its token number
+        continue
+
+    program.append(opcode)                                                   # Add the opcode to the program, increment the token counter
     token_counter += 1
 
-    # Handle opcodes
-    if opcode == "PUSH":
-        # Expects a number
-        try:
-            number = int(line_parts[1])
-            program.append(number)
-            token_counter += 1
-        except (IndexError, ValueError):
-            raise ValueError(f"Invalid number in PUSH: {line}")
+    ##################################################
+    #            Handle Paremeter Opcodes            #
+    ##################################################
 
-    elif opcode == "PRINT":
-        # Expects a string literal
-        raw_string = ' '.join(line_parts[1:]).strip()
+    if opcode == "PUSH":                                                     # ---- If the opcode is PUSH ----
+        try:
+            number = int(line_parts[1])                                      # Parse the number
+            program.append(number)                                           # Add the number to the program
+            token_counter += 1                                               # Increment the token counter
+
+        except (IndexError, ValueError):                                     # If the number is not valid
+            raise ValueError(f"Invalid number in PUSH: {line}")              # Gracefully raise a program error
+
+    elif opcode == "PRINT":                                                  # ---- If the opcode is PRINT ----
+
+        raw_string = ' '.join(line_parts[1:]).strip()                        # Join the rest of the line as a string
         if (raw_string.startswith('"') and raw_string.endswith('"')) or \
-           (raw_string.startswith("'") and raw_string.endswith("'")):
-            string_literal = raw_string[1:-1]  # Remove quotes
-            program.append(string_literal)
-            token_counter += 1
+           (raw_string.startswith("'") and raw_string.endswith("'")):        # If the string is enclosed in quotes (single or double)
+            string_literal = raw_string[1:-1]                                # Remove the quotes
+            program.append(string_literal)                                   # Add the string to the program
+            token_counter += 1                                               # Increment the token counter
         else:
-            raise ValueError(f"Invalid string literal in PRINT: {line}")
+            raise ValueError(f"Invalid string literal in PRINT: {line}")     # Gracefully raise a program error
 
     elif opcode in ["JUMP", "JUMP.IF.0", "JUMP.IF.POS"]:
         # Expects a label
