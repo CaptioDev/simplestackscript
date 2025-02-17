@@ -143,14 +143,16 @@ while program[pc] != "HALT":
     elif opcode == "DIV":  
         a = stack.pop()
         b = stack.pop()
-        stack.push(b / a)
+        if a == 0:
+            raise ZeroDivisionError("Division by zero")
+        stack.push(b // a)
     elif opcode == "PRINT":
         string_literal = program[pc]
         pc += 1
         print(string_literal)
     elif opcode == "READ":
         try:
-            value = int(input())  # read input inside the READ instruction
+            value = int(input())  
             stack.push(value)
         except ValueError:
             print("Error: Invalid input. Must be an integer.", file=sys.stderr)
