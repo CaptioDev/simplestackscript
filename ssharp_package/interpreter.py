@@ -121,57 +121,56 @@ class Stack:                                                    # Start the stac
             raise IndexError("Stack is Empty")                  # Gracefully raise stack empty error
         return self.array[self.sp]                              # Return top of stack for processing
 
-pc = 0
-stack = Stack(256)
-loop_tracker = {}
+pc = 0                                          # Instantiate the program counter
+stack = Stack(256)                              # Instantiate the stack memory
+loop_tracker = {}                               # Instantiate loop tracking
 
-while pc < len(program):
+while pc < len(program):                        # Start the program loop
 
-    opcode = program[pc]
-    pc += 1
+    opcode = program[pc]                        # Load first opcode for processing
+    pc += 1                                     # Increase program counter
 
-    if opcode == "PUSH":
+    if opcode == "PUSH":                        # Adds a number to the stack memory
         number = program[pc]
         pc += 1
         stack.push(number)
 
-    elif opcode == "POP":
+    elif opcode == "POP":                       # Removes a number from stack memory
         stack.pop()
 
-    elif opcode == "ADD":
-        a = stack.pop()
+    elif opcode == "ADD":                       # Adds two numbers from stack memory
+        a = stack.pop()                         # It removes the top two numbers from stack to add, then pushes
         b = stack.pop()
         stack.push(a + b)
 
-    elif opcode == "SUB":
-        a = stack.pop()
+    elif opcode == "SUB":                       # Subtracts two numbers from stack memory
+        a = stack.pop()                         # It removes the top two numbers from stack to subtract, then pushes
         b = stack.pop()
         stack.push(b - a)
 
-    elif opcode == "MUL":
-        a = stack.pop()
+    elif opcode == "MUL":                       # Multiplies two numbers from stack memory
+        a = stack.pop()                         # Same thing as add and subtract...
         b = stack.pop()
         stack.push(a * b)
 
-    elif opcode == "DIV":  
-        a = stack.pop()
+    elif opcode == "DIV":                       # Same thing as add, subtract, and multipy...
+        a = stack.pop()                         # With graceful divide by zero error
         b = stack.pop()
         if a == 0:
             raise ZeroDivisionError("Division by zero")
         stack.push(b // a)
 
-    elif opcode == "PRINT":
+    elif opcode == "PRINT":                     # Logic to print to screen
         string_literal = program[pc]
         pc += 1
         print(string_literal)
 
-    elif opcode == "READ":
+    elif opcode == "READ":                      # Logic to read user input
         try:
             value = int(input())  
             stack.push(value)
         except ValueError:
-            print("Error: Invalid input. Must be an integer.", file=sys.stderr)
-            exit(1)
+            raise ValueError("Invalid integer input")
 
     elif opcode == "JUMP":
         label = program[pc]
