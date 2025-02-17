@@ -1,18 +1,16 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.2
 Name: simplestackscript
 Version: 1.0.0.dev2
-Summary: UNKNOWN
-Home-page: UNKNOWN
-License: UNKNOWN
-Platform: UNKNOWN
 Description-Content-Type: text/markdown
 License-File: LICENSE
+Dynamic: description
+Dynamic: description-content-type
 
-# S3 - Simple Stack Script 
+# S# - Simple Stack Script 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/release/python-390/) [![Built with Python](https://img.shields.io/badge/Built_With-Python-blue)](https://www.python.org) [![PyPI version](https://img.shields.io/pypi/v/simplestackscript)](https://pypi.org/project/simplestackscript/) [![CodeQL](https://github.com/CaptioDev/simplestackscript/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/CaptioDev/simplestackscript/actions/workflows/github-code-scanning/codeql) [![GitHub last commit](https://img.shields.io/github/last-commit/CaptioDev/simplestackscript)](https://github.com/CaptioDev/simplestackscript/commits/main) 
 
 
-S3 (Simple Stack Script) is a lightweight, stack-based programming language designed for simplicity and power. It combines stack-based execution with variable support, making it an excellent choice for scripting, automation, and embedded systems.
+S# (Simple Stack Script) is a lightweight, stack-based programming language designed for simplicity and power. It combines stack-based execution with variable support, making it an excellent choice for scripting, automation, and embedded systems.
 
 ## Important: We are now an officially published Python package!!! 
 
@@ -36,13 +34,13 @@ If you are reading this on PyPI, please use the first installation choice below:
 pip install simplestackscript
 ```
 
-This is the easiest way to install S3.  pip will automatically download and install the latest version from PyPI.
+This is the easiest way to install S#.  pip will automatically download and install the latest version from PyPI.
 If you would rather install from source, follow the instructions below:
 
 1.  **Clone the repository:**
 
     ```bash
-    git clone [https://github.com/CaptioDev/simplestackscript.git](https://github.com/CaptioDev/simplestackscript.git)
+    git clone https://github.com/CaptioDev/simplestackscript.git
     cd simplestackscript
     ```
 
@@ -58,11 +56,14 @@ If you would rather install from source, follow the instructions below:
     s3 my_program.s3
     ```
 
+> [!NOTE]
+> You can also clone the repository using SSH and your GitHub Public Key by replacing the first line within the first step to: `git clone git@github.com:CaptioDev/simplestackscript.git`
+
 ---
 
 ## 📖 Language Reference
 
-S3 uses a stack-based architecture, where most operations manipulate a stack of values.  Instructions are processed sequentially.
+S# uses a stack-based architecture, where most operations manipulate a stack of values.  Instructions are processed sequentially.
 
 ### Stack Manipulation
 
@@ -107,7 +108,7 @@ S3 uses a stack-based architecture, where most operations manipulate a stack of 
 
 ## 📝 Examples
 
-```s3
+```ssharp
 # Example: Adding two numbers
 PUSH 5
 PUSH 10
@@ -125,5 +126,4 @@ HALT
 
 💡 Contributing
 
-Contributions are welcome! Please open an issue or submit a pull request.
-
+Contributions are welcome! Please open an issue or submit a pull request. If you want to email us, contact at: sapinyo@proton.me

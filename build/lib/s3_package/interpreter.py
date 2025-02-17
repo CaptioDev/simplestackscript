@@ -1,4 +1,5 @@
 import sys
+from time import sleep
 
 # read filepath
 program_filepath = sys.argv[1]
@@ -15,19 +16,19 @@ with open(program_filepath, 'r') as program_file:
 program = []
 token_counter = 0
 label_tracker = {}
+
 for line in program_lines:
-    parts = line.split(" ")
-    opcode = parts[0]
 
-    # check for empty line
-    if opcode == "":
-        continue
+    # Remove comments
+    line = line.split("#", 1)[0].strip()
+    
+    if not line:
+        continue  # Skip empty lines
 
-    # check for comments
-    if opcode == "#":
-        continue
+    line_parts = line.split(" ")
+    opcode = line_parts[0]
 
-    # check if opcode is a label
+    # Check if opcode is a label
     if opcode.endswith(":"):
         label_tracker[opcode[:-1]] = token_counter
         continue
@@ -36,29 +37,54 @@ for line in program_lines:
     program.append(opcode)
     token_counter += 1
 
-    # handle opcodes
+    # Handle opcodes
     if opcode == "PUSH":
-        # expects a number
-        number = int(parts[1])
-        program.append(number)
-        token_counter += 1
+        # Expects a number
+        try:
+            number = int(line_parts[1])
+            program.append(number)
+            token_counter += 1
+        except (IndexError, ValueError):
+            raise ValueError(f"Invalid number in PUSH: {line}")
+
     elif opcode == "PRINT":
-        # expects a string literal
-        string_literal = ' '.join(parts[1:])[1:-1]
-        program.append(string_literal)
-        token_counter += 1
+        # Expects a string literal
+        raw_string = ' '.join(line_parts[1:]).strip()
+        if (raw_string.startswith('"') and raw_string.endswith('"')) or \
+           (raw_string.startswith("'") and raw_string.endswith("'")):
+            string_literal = raw_string[1:-1]  # Remove quotes
+            program.append(string_literal)
+            token_counter += 1
+        else:
+            raise ValueError(f"Invalid string literal in PRINT: {line}")
+
     elif opcode in ["JUMP", "JUMP.IF.0", "JUMP.IF.POS"]:
-        # expects a label
-        label = parts[1]
+        # Expects a label
+        label = line_parts[1]
+        if label not in label_tracker:
+            raise ValueError(f"Undefined label '{label}' in {opcode}")
         program.append(label)
         token_counter += 1
+
     elif opcode == "LOOP":
-        # expects a line number and a repeat count
-        line_number = int(parts[1])
-        repeat_count = int(parts[2])
-        program.append(line_number)
-        program.append(repeat_count)
-        token_counter += 2
+        # Expects a line number and a repeat count
+        try:
+            line_number = int(line_parts[1])
+            repeat_count = int(line_parts[2])
+            program.append(line_number)
+            program.append(repeat_count)
+            token_counter += 2
+        except (IndexError, ValueError):
+            raise ValueError(f"Invalid LOOP format: {line}")
+
+    elif opcode == "WAIT":
+        # Expects a number
+        try:
+            number = int(line_parts[1])
+            program.append(number)
+            token_counter += 1
+        except (IndexError, ValueError):
+            raise ValueError(f"Invalid number in WAIT: {line}")
 
 ###########################
 #     Interpretation      #
@@ -90,9 +116,10 @@ class Stack:
 
 pc = 0
 stack = Stack(256)
-wait_tracker = {}
+loop_tracker = {}
 
-while program[pc] != "HALT":
+while pc < len(program):
+
     opcode = program[pc]
     pc += 1
 
@@ -100,81 +127,99 @@ while program[pc] != "HALT":
         number = program[pc]
         pc += 1
         stack.push(number)
+
     elif opcode == "POP":
         stack.pop()
+
     elif opcode == "ADD":
         a = stack.pop()
         b = stack.pop()
         stack.push(a + b)
+
     elif opcode == "SUB":
         a = stack.pop()
         b = stack.pop()
         stack.push(b - a)
+
     elif opcode == "MUL":
         a = stack.pop()
         b = stack.pop()
         stack.push(a * b)
+
     elif opcode == "DIV":  
         a = stack.pop()
         b = stack.pop()
-        stack.push(b / a)
+        if a == 0:
+            raise ZeroDivisionError("Division by zero")
+        stack.push(b // a)
+
     elif opcode == "PRINT":
         string_literal = program[pc]
         pc += 1
         print(string_literal)
+
     elif opcode == "READ":
         try:
-            value = int(input())  # read input inside the READ instruction
+            value = int(input())  
             stack.push(value)
         except ValueError:
             print("Error: Invalid input. Must be an integer.", file=sys.stderr)
             exit(1)
+
     elif opcode == "JUMP":
         label = program[pc]
         pc = label_tracker[label]
+
     elif opcode == "JUMP.IF.0":
         number = stack.top()
         if number == 0:
             pc = label_tracker[program[pc]]
         else:
             pc += 1
+
     elif opcode == "JUMP.IF.POS":
         number = stack.top()
         if number > 0:
             pc = label_tracker[program[pc]]
         else:
             pc += 1
+
     elif opcode == "LOOP":
-        line_number = int(program[pc]) # jump line
+        line_number = int(program[pc])  # Jump line
         pc += 1
-        repeat_count = int(program[pc]) # times to repeat
+        repeat_count = int(program[pc])  # Times to repeat
         pc += 1
 
         loop_key = f"LOOP-{line_number}"
 
-        if loop_key not in wait_tracker:
-            wait_tracker[loop_key] = repeat_count # initialize repeat count
+        if loop_key not in loop_tracker:
+            loop_tracker[loop_key] = repeat_count  # Initialize repeat count
 
-        if wait_tracker[loop_key] > 0:
-            wait_tracker[loop_key] -= 1
-            pc = line_number # jump to specified line number
+        if loop_tracker[loop_key] > 0:
+            loop_tracker[loop_key] -= 1
+            pc = line_number  # Jump to specified line number
         else:
-            del wait_tracker[loop_key]
+            del loop_tracker[loop_key]
+
     elif opcode == "HALT":
         break
+
     elif opcode == "DUP":
         stack.push(stack.top())
+
     elif opcode == "SWAP":
         a = stack.pop()
         b = stack.pop()
         stack.push(a)
         stack.push(b)
+
     elif opcode == "OVER":
         a = stack.pop()
         b = stack.pop()
         stack.push(b)
         stack.push(a)
         stack.push(b)
+
     elif opcode == "ROT":
         a = stack.pop()
         b = stack.pop()
@@ -182,15 +227,23 @@ while program[pc] != "HALT":
         stack.push(b)
         stack.push(a)
         stack.push(c)
+
     elif opcode == "NIP":
         a = stack.pop()
         stack.pop()
         stack.push(a)
+
     elif opcode == "TUCK":
         a = stack.pop()
         b = stack.pop()
         stack.push(a)
         stack.push(b)
         stack.push(a)
+
     elif opcode == "PRINT.TOP":
         print(stack.top())
+
+    elif opcode == "WAIT":
+        number = program[pc]
+        pc += 1
+        sleep(number)
