@@ -1,10 +1,9 @@
 # S# - Simple Stack Script 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/release/python-390/) [![Built with Python](https://img.shields.io/badge/Built_With-Python-blue)](https://www.python.org) [![PyPI version](https://img.shields.io/pypi/v/simplestackscript)](https://pypi.org/project/simplestackscript/) [![CodeQL](https://github.com/CaptioDev/simplestackscript/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/CaptioDev/simplestackscript/actions/workflows/github-code-scanning/codeql) [![GitHub last commit](https://img.shields.io/github/last-commit/CaptioDev/simplestackscript)](https://github.com/CaptioDev/simplestackscript/commits/main) 
 
-
 S# (Simple Stack Script) is a lightweight, stack-based programming language designed for simplicity and power. It combines stack-based execution with variable support, making it an excellent choice for scripting, automation, and embedded systems.
 
-## Important: We are now an officially published Python package!!! 
+## Important: We are now an officially published Python package!!!
 
 ## 🚀 Features
 
@@ -15,6 +14,8 @@ S# (Simple Stack Script) is a lightweight, stack-based programming language desi
 -   **Function Support:** Define and reuse stack-based functions.
 -   **Minimal & Fast:** Designed for lightweight execution.
 -   **Published Python Package:** You can find our package as [simplestackscript on PyPI.](https://pypi.org/project/simplestackscript/)
+-   **Enhanced Error Handling:** Improved validation and debugging messages.
+-   **New Opcodes:** `WAIT` for delay execution and enhanced loop support.
 
 ---
 
@@ -64,7 +65,7 @@ S# uses a stack-based architecture, where most operations manipulate a stack of 
 *   **`DUP`:** Duplicates the top element of the stack and pushes the copy onto the stack.
 *   **`SWAP`:** Swaps the top two elements on the stack.
 *   **`OVER`:** Copies the second element from the top of the stack and pushes it onto the top.
-*   **`ROT`:** Rotates the top three elements of the stack. The top element becomes the bottom, the second becomes the top, and the third becomes the second.
+*   **`ROT`:** Rotates the top three elements of the stack.
 *   **`DROP`:** Discards (pops) the top element of the stack.
 *   **`NIP`:** Removes the second element from the top of the stack.
 *   **`TUCK`:** Copies the top element and inserts it *under* the second element.
@@ -72,9 +73,9 @@ S# uses a stack-based architecture, where most operations manipulate a stack of 
 ### Arithmetic Operations
 
 *   **`ADD`:** Pops the top two elements from the stack, adds them, and pushes the result back onto the stack.
-*   **`SUB`:** Pops the top two elements (a, b) and pushes `b - a` onto the stack. (Order matters!)
+*   **`SUB`:** Pops the top two elements (a, b) and pushes `b - a` onto the stack.
 *   **`MUL`:** Pops the top two elements, multiplies them, and pushes the result.
-*   **`DIV`:** Pops the top two elements (a, b) and performs integer division `b // a`, pushing the result. (Order matters!)
+*   **`DIV`:** Pops the top two elements (a, b) and performs integer division `b // a`, pushing the result.
 
 ### Input/Output
 
@@ -84,9 +85,10 @@ S# uses a stack-based architecture, where most operations manipulate a stack of 
 
 ### Control Flow
 
-*   **`JUMP.IF.0 <label>`:** Pops the top element. If it is 0, execution jumps to the line marked by `<label>`. Otherwise, execution continues to the next instruction.
-*   **`JUMP.IF.POS <label>`:** Pops the top element. If it is greater than 0, execution jumps to the line marked by `<label>`. Otherwise, execution continues.
-*   **`LOOP <line_number>`:** Jumps back to the specified `line_number`. Be careful to avoid infinite loops.
+*   **`JUMP <label>`:** Jumps to the specified `<label>`.
+*   **`JUMP.IF.0 <label>`:** Pops the top element. If it is 0, execution jumps to `<label>`.
+*   **`JUMP.IF.POS <label>`:** Pops the top element. If it is greater than 0, execution jumps to `<label>`.
+*   **`LOOP <line_number> <repeat_count>`:** Loops execution from `line_number` for `repeat_count` times.
 
 ### Program Termination
 
@@ -94,7 +96,11 @@ S# uses a stack-based architecture, where most operations manipulate a stack of 
 
 ### Labels
 
-*   **`<label>:`:** A label marks a specific location in the program code. It's used as a target for jump instructions. The label itself isn't an opcode; it's a marker.
+*   **`<label>:`:** A label marks a specific location in the program code. Used as a target for jump instructions.
+
+### New Instructions
+
+*   **`WAIT <seconds>`:** Pauses execution for the specified number of seconds before proceeding.
 
 ---
 
@@ -114,8 +120,20 @@ READ
 PRINT "You entered:"
 PRINT.TOP
 HALT
+
+# Example: Looping
+PUSH 5
+LOOP 0 3  # Loop 3 times, jumping to line 0
+HALT
+
+# Example: Using WAIT
+PRINT "Waiting for 3 seconds..."
+WAIT 3
+PRINT "Done!"
+HALT
 ```
 
 💡 Contributing
 
 Contributions are welcome! Please open an issue or submit a pull request. If you want to email us, contact at: sapinyo@proton.me
+
