@@ -29,11 +29,11 @@ for line in program_lines:                          # Go through each line of th
     opcode = line_parts[0]                          # Define the opcode as the first part of the line
 
     if opcode.endswith(":"):
-        label_tracker[opcode[:-1]] = token_counter                           # Store the label and its token number
+        label_tracker[opcode[:-1]] = token_counter  # Store the label and its token number
         continue
 
-    program.append(opcode)                                                   # Add the opcode to the program, increment the token counter
-    token_counter += 1
+    program.append(opcode)                          # Add the opcode to the program
+    token_counter += 1                              # Increment the token counter
 
     ##################################################
     #            Handle Paremeter Opcodes            #
@@ -69,26 +69,27 @@ for line in program_lines:                          # Go through each line of th
 
     elif opcode == "LOOP":                                                   # ---- If the opcode is LOOP ----
         try:
-            line_number = int(line_parts[1])
-            repeat_count = int(line_parts[2])
-            program.append(line_number)
-            program.append(repeat_count)
-            token_counter += 2
+            label = line_parts[1]                                            # Get the label
+            if label not in label_tracker:
+                raise ValueError(f"Undefined label '{label}' in {opcode}")   # If the label is not defined, raise an error
+            repeat_count = int(line_parts[2])                                # Get the repeat count
+            program.append(label)                                            # Add the label to the program         <-| Increment token counter by 2
+            program.append(repeat_count)                                     # Add the repeat count to the program  <-| because we added 2 tokens
+            token_counter += 2                                               # Increment the token counter by 2 ------| to the program counter!
         except (IndexError, ValueError):
-            raise ValueError(f"Invalid LOOP format: {line}")
+            raise ValueError(f"Invalid LOOP format: {line}")                 # If the format is invalid, raise an error
 
-    elif opcode == "WAIT":
-        # Expects a number
+    elif opcode == "WAIT":                                                   # ---- If the opcode is WAIT ----
         try:
-            number = int(line_parts[1])
-            program.append(number)
-            token_counter += 1
+            number = int(line_parts[1])                                      # Parse the number
+            program.append(number)                                           # Add the number to the program
+            token_counter += 1                                               # Increment the token counter
         except (IndexError, ValueError):
-            raise ValueError(f"Invalid number in WAIT: {line}")
+            raise ValueError(f"Invalid number in WAIT: {line}")              # If the number is not valid, raise an error
 
-###########################
-#     Interpretation      #
-###########################
+##################################################
+#                 Interpretation                 #
+##################################################
 
 class Stack:
     def __init__(self, size):
