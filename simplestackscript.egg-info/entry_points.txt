@@ -1,2 +1,0 @@
-[console_scripts]
-s3 = s3_package.s3:main
