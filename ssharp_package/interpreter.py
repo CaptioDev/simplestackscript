@@ -172,84 +172,88 @@ while pc < len(program):                        # Start the program loop
         except ValueError:
             raise ValueError("Invalid integer input")
 
-    elif opcode == "JUMP":
+    elif opcode == "GOTO":                      # Logic to forward pointer counter to label
         label = program[pc]
         pc = label_tracker[label]
 
-    elif opcode == "JUMP.IF.0":
-        number = stack.top()
-        if number == 0:
-            pc = label_tracker[program[pc]]
-        else:
-            pc += 1
+    # elif opcode == "JUMP":
+    #     label = program[pc]
+    #     pc = label_tracker[label]
 
-    elif opcode == "JUMP.IF.POS":
-        number = stack.top()
-        if number > 0:
-            pc = label_tracker[program[pc]]
-        else:
-            pc += 1
+    # elif opcode == "JUMP.IF.0":
+    #     number = stack.top()
+    #     if number == 0:
+    #         pc = label_tracker[program[pc]]
+    #     else:
+    #         pc += 1
 
-    elif opcode == "LOOP":
-        line_number = int(program[pc])  # Jump line
+    # elif opcode == "JUMP.IF.POS":
+    #     number = stack.top()
+    #     if number > 0:
+    #         pc = label_tracker[program[pc]]
+    #     else:
+    #         pc += 1
+
+    elif opcode == "LOOP":                      # Logic to loop
+        label = program[pc]                     # Get the label from the program
         pc += 1
-        repeat_count = int(program[pc])  # Times to repeat
+        repeat_count = int(program[pc])         # Get the iteration amount from the program
         pc += 1
 
-        loop_key = f"LOOP-{line_number}"
+        loop_key = f"LOOP-{label}"              # Initialize the loop key for the tracker
 
-        if loop_key not in loop_tracker:
-            loop_tracker[loop_key] = repeat_count  # Initialize repeat count
+        if loop_key not in loop_tracker:        # If not already in tracker, add the key to the tracker
+            loop_tracker[loop_key] = repeat_count
 
-        if loop_tracker[loop_key] > 0:
-            loop_tracker[loop_key] -= 1
-            pc = line_number  # Jump to specified line number
+        if loop_tracker[loop_key] > 0:          # If the value of the iteration amount is higher than zero
+            loop_tracker[loop_key] -= 1         # Decrement the iteration amount by 1
+            pc = label_tracker[label]           # Forward pointer counter to the label
         else:
-            del loop_tracker[loop_key]
+            del loop_tracker[loop_key]          # If the value of the iteration amount is zero or less, delete the loop key
 
-    elif opcode == "HALT":
+    elif opcode == "HALT":                      # Break the program loop for a HALT opcode
         break
 
-    elif opcode == "DUP":
+    elif opcode == "DUP":                       # Duplicate the top value
         stack.push(stack.top())
 
-    elif opcode == "SWAP":
+    elif opcode == "SWAP":                      # Swap the top two values
         a = stack.pop()
         b = stack.pop()
         stack.push(a)
         stack.push(b)
 
-    elif opcode == "OVER":
-        a = stack.pop()
-        b = stack.pop()
-        stack.push(b)
-        stack.push(a)
-        stack.push(b)
+    elif opcode == "OVER":                      # Sandwich the top value between the second top value
+        a = stack.pop()                         # EXAMPLE BELOW
+        b = stack.pop()                         #
+        stack.push(b)                           # TOP to BOTTOM     |     
+        stack.push(a)                           # 5, 3, 2, 7        |
+        stack.push(b)                           # 3, 5, 3, 2, 7    \|/
 
-    elif opcode == "ROT":
-        a = stack.pop()
-        b = stack.pop()
-        c = stack.pop()
-        stack.push(b)
-        stack.push(a)
-        stack.push(c)
+    elif opcode == "ROT":                       # Sandwich the top value between second top and third top value
+        a = stack.pop()                         # EXAMPLE BELOW
+        b = stack.pop()                         #
+        c = stack.pop()                         # TOP to BOTTOM     |
+        stack.push(b)                           # 5, 3, 2, 7        |
+        stack.push(a)                           # 3, 5, 2, 7       \|/
+        stack.push(c)                           #
 
-    elif opcode == "NIP":
+    elif opcode == "NIP":                       # Remove the second top value
         a = stack.pop()
         stack.pop()
         stack.push(a)
 
-    elif opcode == "TUCK":
-        a = stack.pop()
-        b = stack.pop()
-        stack.push(a)
-        stack.push(b)
-        stack.push(a)
+    elif opcode == "TUCK":                      # Sandwich the second top value between the top value
+        a = stack.pop()                         # EXAMPLE BELOW
+        b = stack.pop()                         #
+        stack.push(a)                           # TOP to BOTTOM
+        stack.push(b)                           # 5, 3, 2, 7
+        stack.push(a)                           # 5, 3, 5, 2, 7
 
-    elif opcode == "PRINT.TOP":
-        print(stack.top())
+    elif opcode == "PRINT.TOP":                 # Prints top value in stack
+        print(stack.top())                      # TODO: Make it so you can do this in the PRINT opcode
 
-    elif opcode == "WAIT":
+    elif opcode == "WAIT":                      # Sleep logic
         number = program[pc]
         pc += 1
         sleep(number)
