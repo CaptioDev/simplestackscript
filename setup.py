@@ -9,7 +9,7 @@ setup(
     packages=find_packages(),
     entry_points={
         'console_scripts': [
-            's# = s#_package.s#:main',
+            'ssharp = ssharp_package.ssharp:main',
         ],
     },
     install_requires=[],
