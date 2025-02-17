@@ -100,7 +100,7 @@ S# uses a stack-based architecture, where most operations manipulate a stack of 
 
 ### New Instructions
 
-*   **`WAIT <seconds>`:** Pauses execution for the specified number of seconds before proceeding.
+*   **`WAIT <milliseconds>`:** Pauses execution for the specified number of milliseconds before proceeding.
 
 ---
 
@@ -128,7 +128,7 @@ HALT
 
 # Example: Using WAIT
 PRINT "Waiting for 3 seconds..."
-WAIT 3
+WAIT 3000
 PRINT "Done!"
 HALT
 ```
