@@ -19,18 +19,16 @@ label_tracker = {}
 
 for line in program_lines:
 
-    parts = line.split(" ")
-    opcode = parts[0]
+    # Remove comments
+    line = line.split("#", 1)[0].strip()
+    
+    if not line:
+        continue  # Skip empty lines
 
-    # check for comments (rudimentary)
-    if "#" in parts:
-        parts = line.partition("#")[0].split(" ")
+    line_parts = line.split(" ")
+    opcode = line_parts[0]
 
-    # check for empty line
-    if opcode == "":
-        continue
-
-    # check if opcode is a label
+    # Check if opcode is a label
     if opcode.endswith(":"):
         label_tracker[opcode[:-1]] = token_counter
         continue
@@ -42,29 +40,33 @@ for line in program_lines:
     # handle opcodes
     if opcode == "PUSH":
         # expects a number
-        number = int(parts[1])
+        number = int(line_parts[1])
         program.append(number)
         token_counter += 1
+
     elif opcode == "PRINT":
         # expects a string literal
-        string_literal = ' '.join(parts[1:])[1:-1]
+        string_literal = ' '.join(line_parts[1:])[1:-1]
         program.append(string_literal)
         token_counter += 1
+
     elif opcode in ["JUMP", "JUMP.IF.0", "JUMP.IF.POS"]:
         # expects a label
-        label = parts[1]
+        label = line_parts[1]
         program.append(label)
         token_counter += 1
+
     elif opcode == "LOOP":
         # expects a line number and a repeat count
-        line_number = int(parts[1])
-        repeat_count = int(parts[2])
+        line_number = int(line_parts[1])
+        repeat_count = int(line_parts[2])
         program.append(line_number)
         program.append(repeat_count)
         token_counter += 2
+
     elif opcode == "WAIT":
         # expects a number
-        number = int(parts[1])
+        number = int(line_parts[1])
         program.append(number)
         token_counter += 1
 
