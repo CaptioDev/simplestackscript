@@ -118,7 +118,8 @@ pc = 0
 stack = Stack(256)
 loop_tracker = {}
 
-while program[pc] != "HALT":
+while pc < len(program):
+
     opcode = program[pc]
     pc += 1
 
@@ -126,30 +127,37 @@ while program[pc] != "HALT":
         number = program[pc]
         pc += 1
         stack.push(number)
+
     elif opcode == "POP":
         stack.pop()
+
     elif opcode == "ADD":
         a = stack.pop()
         b = stack.pop()
         stack.push(a + b)
+
     elif opcode == "SUB":
         a = stack.pop()
         b = stack.pop()
         stack.push(b - a)
+
     elif opcode == "MUL":
         a = stack.pop()
         b = stack.pop()
         stack.push(a * b)
+
     elif opcode == "DIV":  
         a = stack.pop()
         b = stack.pop()
         if a == 0:
             raise ZeroDivisionError("Division by zero")
         stack.push(b // a)
+
     elif opcode == "PRINT":
         string_literal = program[pc]
         pc += 1
         print(string_literal)
+
     elif opcode == "READ":
         try:
             value = int(input())  
@@ -157,21 +165,25 @@ while program[pc] != "HALT":
         except ValueError:
             print("Error: Invalid input. Must be an integer.", file=sys.stderr)
             exit(1)
+
     elif opcode == "JUMP":
         label = program[pc]
         pc = label_tracker[label]
+
     elif opcode == "JUMP.IF.0":
         number = stack.top()
         if number == 0:
             pc = label_tracker[program[pc]]
         else:
             pc += 1
+
     elif opcode == "JUMP.IF.POS":
         number = stack.top()
         if number > 0:
             pc = label_tracker[program[pc]]
         else:
             pc += 1
+
     elif opcode == "LOOP":
         line_number = int(program[pc])  # Jump line
         pc += 1
@@ -188,21 +200,26 @@ while program[pc] != "HALT":
             pc = line_number  # Jump to specified line number
         else:
             del loop_tracker[loop_key]
+
     elif opcode == "HALT":
         break
+
     elif opcode == "DUP":
         stack.push(stack.top())
+
     elif opcode == "SWAP":
         a = stack.pop()
         b = stack.pop()
         stack.push(a)
         stack.push(b)
+
     elif opcode == "OVER":
         a = stack.pop()
         b = stack.pop()
         stack.push(b)
         stack.push(a)
         stack.push(b)
+
     elif opcode == "ROT":
         a = stack.pop()
         b = stack.pop()
@@ -210,18 +227,22 @@ while program[pc] != "HALT":
         stack.push(b)
         stack.push(a)
         stack.push(c)
+
     elif opcode == "NIP":
         a = stack.pop()
         stack.pop()
         stack.push(a)
+
     elif opcode == "TUCK":
         a = stack.pop()
         b = stack.pop()
         stack.push(a)
         stack.push(b)
         stack.push(a)
+
     elif opcode == "PRINT.TOP":
         print(stack.top())
+
     elif opcode == "WAIT":
         number = program[pc]
         pc += 1
