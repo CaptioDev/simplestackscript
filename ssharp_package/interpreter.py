@@ -86,34 +86,40 @@ for line in program_lines:                          # Go through each line of th
             token_counter += 1                                               # Increment the token counter
         except (IndexError, ValueError):
             raise ValueError(f"Invalid number in WAIT: {line}")              # If the number is not valid, raise an error
+    
+    # TODO: IF OPCODE, SEE BELOW
+    # 
+    # The IF opcode has three arguments: IF [<|>|=] <number> <secondary_opcode> ...
+    # This allows conditional logic where if the top of the stack is greater than, less than,
+    # or equal to, a different opcode can start.
 
 ##################################################
 #                 Interpretation                 #
 ##################################################
 
-class Stack:
+class Stack:                                                    # Start the stack memory
     def __init__(self, size):
-        self.buf = [0 for _ in range(size)]
-        self.sp = -1
+        self.array = [0 for _ in range(size)]                   # Initialize the stack with zeros
+        self.sp = -1                                            # Initialize the pointer right before the stack
         self.size = size
 
-    def push(self, number):
-        if self.sp >= self.size - 1:
-            raise IndexError("Stack Overflow")  
-        self.sp += 1
-        self.buf[self.sp] = number
+    def push(self, number):                                     # Stack push function
+        if self.sp >= self.size - 1:                            # If the pointer is pointing beyond stack memory
+            raise IndexError("Stack Overflow")                  # Gracefully raise stack overflow error
+        self.sp += 1                                            # Move pointer to front of stack
+        self.array[self.sp] = number                            # Assign stack value to number
 
-    def pop(self):
-        if self.sp < 0:
-            raise IndexError("Stack Underflow")
-        number = self.buf[self.sp]
-        self.sp -= 1
-        return number
+    def pop(self):                                              # Stack pop functionality
+        if self.sp < 0:                                         # If the pointer is pointing below stack memory
+            raise IndexError("Stack Underflow")                 # Gracefully raise stack underflow error
+        number = self.array[self.sp]                            # Get top value of stack
+        self.sp -= 1                                            # Move pointer to the next back of the stack
+        return number                                           # Return number for optional further processing
     
-    def top(self):
-        if self.sp < 0:
-            raise IndexError("Stack is Empty")
-        return self.buf[self.sp]
+    def top(self):                                              # Stack top functionality
+        if self.sp < 0:                                         # If the pointer is pointing below stack memory
+            raise IndexError("Stack is Empty")                  # Gracefully raise stack empty error
+        return self.array[self.sp]                              # Return top of stack for processing
 
 pc = 0
 stack = Stack(256)
