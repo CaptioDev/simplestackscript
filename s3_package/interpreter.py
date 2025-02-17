@@ -116,7 +116,7 @@ class Stack:
 
 pc = 0
 stack = Stack(256)
-wait_tracker = {}
+loop_tracker = {}
 
 while program[pc] != "HALT":
     opcode = program[pc]
@@ -173,21 +173,21 @@ while program[pc] != "HALT":
         else:
             pc += 1
     elif opcode == "LOOP":
-        line_number = int(program[pc]) # jump line
+        line_number = int(program[pc])  # Jump line
         pc += 1
-        repeat_count = int(program[pc]) # times to repeat
+        repeat_count = int(program[pc])  # Times to repeat
         pc += 1
 
         loop_key = f"LOOP-{line_number}"
 
-        if loop_key not in wait_tracker:
-            wait_tracker[loop_key] = repeat_count # initialize repeat count
+        if loop_key not in loop_tracker:
+            loop_tracker[loop_key] = repeat_count  # Initialize repeat count
 
-        if wait_tracker[loop_key] > 0:
-            wait_tracker[loop_key] -= 1
-            pc = line_number # jump to specified line number
+        if loop_tracker[loop_key] > 0:
+            loop_tracker[loop_key] -= 1
+            pc = line_number  # Jump to specified line number
         else:
-            del wait_tracker[loop_key]
+            del loop_tracker[loop_key]
     elif opcode == "HALT":
         break
     elif opcode == "DUP":
