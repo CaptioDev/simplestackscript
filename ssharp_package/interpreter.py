@@ -59,16 +59,15 @@ for line in program_lines:                          # Go through each line of th
         else:
             raise ValueError(f"Invalid string literal in PRINT: {line}")     # Gracefully raise a program error
 
-    elif opcode in ["JUMP", "JUMP.IF.0", "JUMP.IF.POS"]:
-        # Expects a label
-        label = line_parts[1]
-        if label not in label_tracker:
-            raise ValueError(f"Undefined label '{label}' in {opcode}")
-        program.append(label)
-        token_counter += 1
+    elif opcode == "GOTO":                                                   # ---- If the opcode is GOTO ----
 
-    elif opcode == "LOOP":
-        # Expects a line number and a repeat count
+        label = line_parts[1]                                                # Get the label
+        if label not in label_tracker:
+            raise ValueError(f"Undefined label '{label}' in {opcode}")       # If the label is not defined, raise an error
+        program.append(label)                                                # Add the label to the program
+        token_counter += 1                                                   # Increment the token counter
+
+    elif opcode == "LOOP":                                                   # ---- If the opcode is LOOP ----
         try:
             line_number = int(line_parts[1])
             repeat_count = int(line_parts[2])
