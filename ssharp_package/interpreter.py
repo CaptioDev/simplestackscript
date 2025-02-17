@@ -1,259 +1,140 @@
-# Import libraries
 import sys
-from time import sleep
 
-# Take the filepath from the argument when running this script
-program_filepath = sys.argv[1]
+#################################################
+#                     Stack                     #
+#################################################
+
+class Stack:
+    def __init__(self, size=256):
+        self.array = []
+        self.size = size
+
+    def push(self, number):                        # Stack push function
+        if len(self.array) >= self.size:
+            raise IndexError("Stack Overflow")     # Gracefully raise stack overflow error
+        self.array.append(number)
+
+    def pop(self):                                 # Stack pop function
+        if not self.array:
+            raise IndexError("Stack Underflow")    # Gracefully raise stack underflow error
+        return self.array.pop()
+
+    def top(self):                                 # Stack top function
+        if not self.array:
+            raise IndexError("Stack is Empty")     # Gracefully raise stack empty error
+        return self.array[-1]
+
+# The stack class was fixed by removing the sp variable keeping track of the pointer,
+# instead, we are now using Python's built-in append() and pop() methods... I didn't know
+# they were a thing...
 
 ##################################################
 #                  Tokenization                  #
 ##################################################
 
-# Read the file line by line
-program_lines = []
-with open(program_filepath, 'r') as program_file:
-    program_lines = [line.strip() for line in program_file.readlines()]
+def tokenize(program_lines):
+    program = []
+    label_tracker = {}
 
-program = []                                        # Stores program tokens
-token_counter = 0                                   # Stores the number of tokens
-label_tracker = {}                                  # Stores the token place of labels
+    for line in program_lines:
+        line = line.split("#", 1)[0].strip()               # Remove comments and strip whitespace
 
-for line in program_lines:                          # Go through each line of the program
+        if not line:
+            continue                                       # Skip empty lines
 
-    line = line.split("#", 1)[0].strip()            # Remove the comments from every line
-    
-    if not line:                                    # Remove all empty lines
-        continue
-
-    line_parts = line.split(" ")                    # Split the line by spaces
-    opcode = line_parts[0]                          # Define the opcode as the first part of the line
-
-    if opcode.endswith(":"):
-        label_tracker[opcode[:-1]] = token_counter  # Store the label and its token number
-        continue
-
-    program.append(opcode)                          # Add the opcode to the program
-    token_counter += 1                              # Increment the token counter
-
-    ##################################################
-    #            Handle Paremeter Opcodes            #
-    ##################################################
-
-    if opcode == "PUSH":                                                     # ---- If the opcode is PUSH ----
-        try:
-            number = int(line_parts[1])                                      # Parse the number
-            program.append(number)                                           # Add the number to the program
-            token_counter += 1                                               # Increment the token counter
-
-        except (IndexError, ValueError):                                     # If the number is not valid
-            raise ValueError(f"Invalid number in PUSH: {line}")              # Gracefully raise a program error
-
-    elif opcode == "PRINT":                                                  # ---- If the opcode is PRINT ----
-
-        raw_string = ' '.join(line_parts[1:]).strip()                        # Join the rest of the line as a string
-        if (raw_string.startswith('"') and raw_string.endswith('"')) or \
-           (raw_string.startswith("'") and raw_string.endswith("'")):        # If the string is enclosed in quotes (single or double)
-            string_literal = raw_string[1:-1]                                # Remove the quotes
-            program.append(string_literal)                                   # Add the string to the program
-            token_counter += 1                                               # Increment the token counter
+        parts = line.split()
+        
+        if parts[0].endswith(":"):                         # Store label positions
+            label_tracker[parts[0][:-1]] = len(program)
         else:
-            raise ValueError(f"Invalid string literal in PRINT: {line}")     # Gracefully raise a program error
+            program.append(parts)                          # Store program tokens
 
-    elif opcode == "GOTO":                                                   # ---- If the opcode is GOTO ----
+    return program, label_tracker
 
-        label = line_parts[1]                                                # Get the label
-        if label not in label_tracker:
-            raise ValueError(f"Undefined label '{label}' in {opcode}")       # If the label is not defined, raise an error
-        program.append(label)                                                # Add the label to the program
-        token_counter += 1                                                   # Increment the token counter
+# So, this changed up a lot. The tokenize function now returns the program array of arrays. An example of a 
+# program array would be: [['PUSH', '5'], ['PUSH', '3'], ['ADD'], ['PRINT', 'Hello, World!'], ['HALT']]. This
+# makes more sense as now each line is a new array and we can see where lines start and end. The label_tracker
+# stayed the same.
+#
+# Hehe... by the way, I got rid of all the validation checks...
 
-    elif opcode == "LOOP":                                                   # ---- If the opcode is LOOP ----
-        try:
-            label = line_parts[1]                                            # Get the label
-            if label not in label_tracker:
-                raise ValueError(f"Undefined label '{label}' in {opcode}")   # If the label is not defined, raise an error
-            repeat_count = int(line_parts[2])                                # Get the repeat count
-            program.append(label)                                            # Add the label to the program         <-| Increment token counter by 2
-            program.append(repeat_count)                                     # Add the repeat count to the program  <-| because we added 2 tokens
-            token_counter += 2                                               # Increment the token counter by 2 ------| to the program counter!
-        except (IndexError, ValueError):
-            raise ValueError(f"Invalid LOOP format: {line}")                 # If the format is invalid, raise an error
+# TODO: Add validation checks for the program array
 
-    elif opcode == "WAIT":                                                   # ---- If the opcode is WAIT ----
-        try:
-            number = int(line_parts[1])                                      # Parse the number
-            program.append(number)                                           # Add the number to the program
-            token_counter += 1                                               # Increment the token counter
-        except (IndexError, ValueError):
-            raise ValueError(f"Invalid number in WAIT: {line}")              # If the number is not valid, raise an error
-    
-    # TODO: IF OPCODE, SEE BELOW
-    # 
-    # The IF opcode has three arguments: IF [<|>|=] <number> <secondary_opcode> ...
-    # This allows conditional logic where if the top of the stack is greater than, less than,
-    # or equal to, a different opcode can start.
+# TODO: ##################################################
+# TODO: #                   Validation                   #
+# TODO: ##################################################
 
 ##################################################
 #                 Interpretation                 #
 ##################################################
 
-class Stack:                                                    # Start the stack memory
-    def __init__(self, size):
-        self.array = [0 for _ in range(size)]                   # Initialize the stack with zeros
-        self.sp = -1                                            # Initialize the pointer right before the stack
-        self.size = size
+def execute(program, label_tracker):
+    stack = Stack()                                                  # Instantiate stack
+    pc = 0                                                           # Program counter
 
-    def push(self, number):                                     # Stack push function
-        if self.sp >= self.size - 1:                            # If the pointer is pointing beyond stack memory
-            raise IndexError("Stack Overflow")                  # Gracefully raise stack overflow error
-        self.sp += 1                                            # Move pointer to front of stack
-        self.array[self.sp] = number                            # Assign stack value to number
-
-    def pop(self):                                              # Stack pop functionality
-        if self.sp < 0:                                         # If the pointer is pointing below stack memory
-            raise IndexError("Stack Underflow")                 # Gracefully raise stack underflow error
-        number = self.array[self.sp]                            # Get top value of stack
-        self.sp -= 1                                            # Move pointer to the next back of the stack
-        return number                                           # Return number for optional further processing
-    
-    def top(self):                                              # Stack top functionality
-        if self.sp < 0:                                         # If the pointer is pointing below stack memory
-            raise IndexError("Stack is Empty")                  # Gracefully raise stack empty error
-        return self.array[self.sp]                              # Return top of stack for processing
-
-pc = 0                                          # Instantiate the program counter
-stack = Stack(256)                              # Instantiate the stack memory
-loop_tracker = {}                               # Instantiate loop tracking
-
-while pc < len(program):                        # Start the program loop
-
-    opcode = program[pc]                        # Load first opcode for processing
-    pc += 1                                     # Increase program counter
-
-    if opcode == "PUSH":                        # Adds a number to the stack memory
-        number = program[pc]
+    def op_push():                                                   # PUSH opcode: Push a number onto the stack
+        nonlocal pc
+        stack.push(int(program[pc][1]))
         pc += 1
-        stack.push(number)
 
-    elif opcode == "POP":                       # Removes a number from stack memory
+    def op_pop():                                                    # POP opcode: Remove top value from stack
         stack.pop()
 
-    elif opcode == "ADD":                       # Adds two numbers from stack memory
-        a = stack.pop()                         # It removes the top two numbers from stack to add, then pushes
-        b = stack.pop()
-        stack.push(a + b)
+    def op_add():                                                    # ADD opcode: Add top two values on stack
+        stack.push(stack.pop() + stack.pop())
 
-    elif opcode == "SUB":                       # Subtracts two numbers from stack memory
-        a = stack.pop()                         # It removes the top two numbers from stack to subtract, then pushes
-        b = stack.pop()
+    def op_sub():                                                    # SUB opcode: Subtract top value from second top value
+        a, b = stack.pop(), stack.pop()
         stack.push(b - a)
 
-    elif opcode == "MUL":                       # Multiplies two numbers from stack memory
-        a = stack.pop()                         # Same thing as add and subtract...
-        b = stack.pop()
-        stack.push(a * b)
+    def op_mul():                                                    # MUL opcode: Multiply top two values on stack
+        stack.push(stack.pop() * stack.pop())
 
-    elif opcode == "DIV":                       # Same thing as add, subtract, and multipy...
-        a = stack.pop()                         # With graceful divide by zero error
-        b = stack.pop()
-        if a == 0:
-            raise ZeroDivisionError("Division by zero")
+    def op_div():                                                    # DIV opcode: Divide second top value by top value
+        a, b = stack.pop(), stack.pop()
         stack.push(b // a)
 
-    elif opcode == "PRINT":                     # Logic to print to screen
-        string_literal = program[pc]
-        pc += 1
-        print(string_literal)
-
-    elif opcode == "READ":                      # Logic to read user input
-        try:
-            value = int(input())  
-            stack.push(value)
-        except ValueError:
-            raise ValueError("Invalid integer input")
-
-    elif opcode == "GOTO":                      # Logic to forward pointer counter to label
-        label = program[pc]
-        pc = label_tracker[label]
-
-    # elif opcode == "JUMP":
-    #     label = program[pc]
-    #     pc = label_tracker[label]
-
-    # elif opcode == "JUMP.IF.0":
-    #     number = stack.top()
-    #     if number == 0:
-    #         pc = label_tracker[program[pc]]
-    #     else:
-    #         pc += 1
-
-    # elif opcode == "JUMP.IF.POS":
-    #     number = stack.top()
-    #     if number > 0:
-    #         pc = label_tracker[program[pc]]
-    #     else:
-    #         pc += 1
-
-    elif opcode == "LOOP":                      # Logic to loop
-        label = program[pc]                     # Get the label from the program
-        pc += 1
-        repeat_count = int(program[pc])         # Get the iteration amount from the program
+    def op_print():                                                  # PRINT opcode: Print a string literal
+        nonlocal pc
+        print(program[pc][1])
         pc += 1
 
-        loop_key = f"LOOP-{label}"              # Initialize the loop key for the tracker
+    def op_goto():                                                   # GOTO opcode: Jump to a label
+        nonlocal pc
+        pc = label_tracker[program[pc][1]]
 
-        if loop_key not in loop_tracker:        # If not already in tracker, add the key to the tracker
-            loop_tracker[loop_key] = repeat_count
+    def op_halt():                                                   # HALT opcode: Stop execution
+        return None
 
-        if loop_tracker[loop_key] > 0:          # If the value of the iteration amount is higher than zero
-            loop_tracker[loop_key] -= 1         # Decrement the iteration amount by 1
-            pc = label_tracker[label]           # Forward pointer counter to the label
-        else:
-            del loop_tracker[loop_key]          # If the value of the iteration amount is zero or less, delete the loop key
+    dispatch = {
+        "PUSH": op_push,
+        "POP": op_pop,
+        "ADD": op_add,
+        "SUB": op_sub,
+        "MUL": op_mul,
+        "DIV": op_div,
+        "PRINT": op_print,
+        "GOTO": op_goto,
+        "HALT": op_halt,
+    }
 
-    elif opcode == "HALT":                      # Break the program loop for a HALT opcode
-        break
+    while pc < len(program):                                         # Execution loop
+        opcode = program[pc][0]
+        if opcode in dispatch:
+            if dispatch[opcode]() is None:
+                break                                                # Stop execution if HALT is encountered
 
-    elif opcode == "DUP":                       # Duplicate the top value
-        stack.push(stack.top())
+##################################################
+#                    Main                        #
+##################################################
 
-    elif opcode == "SWAP":                      # Swap the top two values
-        a = stack.pop()
-        b = stack.pop()
-        stack.push(a)
-        stack.push(b)
+def main():
+    program_filepath = sys.argv[1]                                   # Get program file path from command line argument
+    with open(program_filepath, 'r') as program_file:
+        program_lines = [line.strip() for line in program_file.readlines()]
+    
+    program, label_tracker = tokenize(program_lines)                 # Tokenize input file
+    execute(program, label_tracker)                                  # Execute program
 
-    elif opcode == "OVER":                      # Sandwich the top value between the second top value
-        a = stack.pop()                         # EXAMPLE BELOW
-        b = stack.pop()                         #
-        stack.push(b)                           # TOP to BOTTOM     |     
-        stack.push(a)                           # 5, 3, 2, 7        |
-        stack.push(b)                           # 3, 5, 3, 2, 7    \|/
-
-    elif opcode == "ROT":                       # Sandwich the top value between second top and third top value
-        a = stack.pop()                         # EXAMPLE BELOW
-        b = stack.pop()                         #
-        c = stack.pop()                         # TOP to BOTTOM     |
-        stack.push(b)                           # 5, 3, 2, 7        |
-        stack.push(a)                           # 3, 5, 2, 7       \|/
-        stack.push(c)                           #
-
-    elif opcode == "NIP":                       # Remove the second top value
-        a = stack.pop()
-        stack.pop()
-        stack.push(a)
-
-    elif opcode == "TUCK":                      # Sandwich the second top value between the top value
-        a = stack.pop()                         # EXAMPLE BELOW
-        b = stack.pop()                         #
-        stack.push(a)                           # TOP to BOTTOM
-        stack.push(b)                           # 5, 3, 2, 7
-        stack.push(a)                           # 5, 3, 5, 2, 7
-
-    elif opcode == "PRINT.TOP":                 # Prints top value in stack
-        print(stack.top())                      # TODO: Make it so you can do this in the PRINT opcode
-
-    elif opcode == "WAIT":                      # Sleep logic
-        number = program[pc]
-        pc += 1
-        sleep(number)
+if __name__ == "__main__":
+    main()                                                           # Run main function
