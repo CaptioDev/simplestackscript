@@ -75,5 +75,10 @@ PRINT "Should happen 5 times!"
 test-loop:
 LOOP test 5
 
+PRINT "Wait 2 seconds..."
+WAIT 2000
+
+PRINT "Nice!"
+
 HALT
 PRINT "Nope!"

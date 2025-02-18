@@ -1,4 +1,6 @@
+# Hehe... libraries... hehehehehehehehehheheheheheheehehhehehehehehe wioo==iiopioioj...
 import sys
+import time
 
 #################################################
 #                     Stack                     #
@@ -140,6 +142,9 @@ def execute(program, label_tracker):
             pc = label_tracker[label] - 1
         else:
             del loop_tracker[loop_key]
+    
+    def op_wait():                                                   # WAIT opcode: Wait for a number of milliseconds
+        time.sleep(int(program[pc][1]) // 1000)
 
     def op_halt():                                                   # HALT opcode: Stop execution
         return 16
@@ -163,6 +168,7 @@ def execute(program, label_tracker):
         "GOTO": op_goto,
         "LOOP": op_loop,
 
+        "WAIT": op_wait,
         "HALT": op_halt,
     }
 
