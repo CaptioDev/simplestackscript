@@ -66,6 +66,7 @@ POP
 
 READ
 PRINT.TOP
+POP
 
 GOTO test-loop
 
@@ -79,6 +80,39 @@ PRINT "Wait 2 seconds..."
 WAIT 2000
 
 PRINT "Nice!"
+
+PUSH 2
+IF = 2 GOTO correct-1
+
+PRINT "INCORRECT!"
+GOTO if-test-2
+
+correct-1:
+PRINT "CORRECT!"
+
+if-test-2:
+POP
+PUSH 12
+IF > 6 GOTO correct-2
+
+PRINT "INCORRECT!"
+GOTO if-test-3
+
+correct-2:
+PRINT "CORRECT!"
+
+if-test-3:
+POP
+PUSH 7
+IF < 12 GOTO correct-3
+
+PRINT "INCORRECT!"
+GOTO done
+
+correct-3:
+PRINT "CORRECT!"
+
+done:
 
 HALT
 PRINT "Nope!"

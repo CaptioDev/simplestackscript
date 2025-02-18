@@ -143,11 +143,35 @@ def execute(program, label_tracker):
         else:
             del loop_tracker[loop_key]
     
+    def op_if():                                                     # IF opcode: Check if condition is true
+        condition = program[pc][1]
+        number = int(program[pc][2])
+
+        # The below code is very repetitive and pooey and we should add a perf commit making it forward
+        # to the execution loop with the secondary opcode. It should be relatively easy if it returns an IF
+        # string and makes the opcode program[pc][3] and then skips making the opcode something else.
+
+        if condition == ">":
+            if stack.top() > number:
+                return "IF"
+            else:
+                return
+        elif condition == "<":
+            if stack.top() < number:
+                return "IF"
+            else:
+                return
+        elif condition == "=":
+            if stack.top() == number:
+                return "IF"
+            else:
+                return
+                
     def op_wait():                                                   # WAIT opcode: Wait for a number of milliseconds
         time.sleep(int(program[pc][1]) // 1000)
 
     def op_halt():                                                   # HALT opcode: Stop execution
-        return 16
+        return "HALT"
 
     dispatch = {
         "PUSH": op_push,
@@ -167,6 +191,7 @@ def execute(program, label_tracker):
 
         "GOTO": op_goto,
         "LOOP": op_loop,
+        "IF": op_if,
 
         "WAIT": op_wait,
         "HALT": op_halt,
@@ -175,8 +200,11 @@ def execute(program, label_tracker):
     while pc < len(program):                                         # Execution loop
         opcode = program[pc][0]
         if opcode in dispatch:
-            if dispatch[opcode]() == 16:
+            response = dispatch[opcode]()
+            if response == "HALT":
                 break                                                # Stop execution if HALT is encountered
+            elif response == "IF":
+                program[pc] = program[pc][3:]
             else:
                 pc += 1
 
