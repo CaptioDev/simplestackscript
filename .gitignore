@@ -1,5 +1,5 @@
-# This is for Matthew West's workflow!
-compile/
+# Matthew's build workflow
+build-compile/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

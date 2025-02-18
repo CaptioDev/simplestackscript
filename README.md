@@ -32,7 +32,7 @@ pip install simplestackscript
 This is the easiest way to install S#.  pip will automatically download and install the latest version from PyPI.
 If you would rather install from source, follow the instructions below:
 
-1.  **Clone the repository:**
+1.  **Clone the repository with HTTPS:**
 
     ```bash
     git clone https://github.com/CaptioDev/simplestackscript.git
