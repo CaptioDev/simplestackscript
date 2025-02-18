@@ -73,9 +73,7 @@ def execute(program, label_tracker):
     pc = 0                                                           # Program counter
 
     def op_push():                                                   # PUSH opcode: Push a number onto the stack
-        nonlocal pc
         stack.push(int(program[pc][1]))
-        pc += 1
 
     def op_pop():                                                    # POP opcode: Remove top value from stack
         stack.pop()
@@ -95,16 +93,20 @@ def execute(program, label_tracker):
         stack.push(b // a)
 
     def op_print():                                                  # PRINT opcode: Print a string literal
-        nonlocal pc
-        print(program[pc][1])
-        pc += 1
+        program[pc][1] = program[pc][1].replace('"', '')
+        program[pc][-1] = program[pc][-1].replace('"', '')
+        literal = " ".join(program[pc][1:])
+        print(literal)
+
+    def op_printtop():                                               # PRINT.TOP opcode: Print the top value of the stack
+        print(stack.top())
 
     def op_goto():                                                   # GOTO opcode: Jump to a label
         nonlocal pc
-        pc = label_tracker[program[pc][1]]
+        pc = label_tracker[program[pc][1]] - 1
 
     def op_halt():                                                   # HALT opcode: Stop execution
-        return None
+        return 16
 
     dispatch = {
         "PUSH": op_push,
@@ -116,13 +118,16 @@ def execute(program, label_tracker):
         "PRINT": op_print,
         "GOTO": op_goto,
         "HALT": op_halt,
+        "PRINT.TOP": op_printtop,
     }
 
     while pc < len(program):                                         # Execution loop
         opcode = program[pc][0]
         if opcode in dispatch:
-            if dispatch[opcode]() is None:
+            if dispatch[opcode]() == 16:
                 break                                                # Stop execution if HALT is encountered
+            else:
+                pc += 1
 
 ##################################################
 #                    Main                        #
