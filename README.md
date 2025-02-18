@@ -6,7 +6,7 @@ S# (Simple Stack Script) is a lightweight, stack-based programming language desi
 ## Important: We are now an officially published Python package!!!
 
 > [!CAUTION]
-> You are currently on the experimental branch of S#. We are currently testing new syntax for the language and you might come accross various issues and bugs. We recommend you switch to the main branch, or for bleeding updates, check for any feature/* brances!
+> You are currently on the experimental branch of S#. We are currently testing new syntax for the language and you might come accross various issues and bugs. We recommend you switch to the main branch.
 
 ## 🚀 Features
 
@@ -18,7 +18,6 @@ S# (Simple Stack Script) is a lightweight, stack-based programming language desi
 -   **Minimal & Fast:** Designed for lightweight execution.
 -   **Published Python Package:** You can find our package as [simplestackscript on PyPI.](https://pypi.org/project/simplestackscript/)
 -   **Enhanced Error Handling:** Improved validation and debugging messages.
--   **New Opcodes:** `WAIT` for delay execution and enhanced loop support.
 
 ---
 
@@ -67,11 +66,7 @@ S# uses a stack-based architecture, where most operations manipulate a stack of 
 *   **`POP`:** Removes the top element from the stack.
 *   **`DUP`:** Duplicates the top element of the stack and pushes the copy onto the stack.
 *   **`SWAP`:** Swaps the top two elements on the stack.
-*   **`OVER`:** Copies the second element from the top of the stack and pushes it onto the top.
 *   **`ROT`:** Rotates the top three elements of the stack.
-*   **`DROP`:** Discards (pops) the top element of the stack.
-*   **`NIP`:** Removes the second element from the top of the stack.
-*   **`TUCK`:** Copies the top element and inserts it *under* the second element.
 
 ### Arithmetic Operations
 
@@ -88,10 +83,8 @@ S# uses a stack-based architecture, where most operations manipulate a stack of 
 
 ### Control Flow
 
-*   **`JUMP <label>`:** Jumps to the specified `<label>`.
-*   **`JUMP.IF.0 <label>`:** Pops the top element. If it is 0, execution jumps to `<label>`.
-*   **`JUMP.IF.POS <label>`:** Pops the top element. If it is greater than 0, execution jumps to `<label>`.
-*   **`LOOP <line_number> <repeat_count>`:** Loops execution from `line_number` for `repeat_count` times.
+*   **`GOTO <label>`:** Jumps to the specified `<label>`.
+*   **`LOOP <label> <repeat_count>`:** Loops execution from `label` for `repeat_count` times.
 
 ### Program Termination
 
@@ -136,7 +129,96 @@ PRINT "Done!"
 HALT
 ```
 
-💡 Contributing
+<details>
+<summary>ALL FEATURE EXAMPLE</summary>
+
+This example includes all of the different opcodes and usage! Hopefully this isn't out of date...
+
+```sscript
+PUSH 16
+PRINT.TOP
+POP
+
+PUSH 2
+PRINT.TOP
+POP
+
+PUSH 2
+PUSH 3
+ADD
+PRINT.TOP
+POP
+
+PUSH 3
+PUSH 2
+SUB
+PRINT.TOP
+POP
+
+PUSH 3
+PUSH 2
+MUL
+PRINT.TOP
+POP
+
+PUSH 4
+PUSH 2
+DIV
+PRINT.TOP
+POP
+
+PRINT "We are testing, bum ba dum ba dum dum daaaa!"
+
+GOTO yes
+HALT
+
+yes:
+PRINT "Yep!"
+
+PUSH 16
+DUP
+PRINT.TOP
+POP
+PRINT.TOP
+POP
+
+PUSH 10
+PUSH 12
+SWAP
+PRINT.TOP
+POP
+PRINT.TOP
+POP
+
+PUSH 1
+PUSH 2
+PUSH 3
+ROT
+PRINT.TOP
+POP
+PRINT.TOP
+POP
+PRINT.TOP
+POP
+
+READ
+PRINT.TOP
+
+GOTO test-loop
+
+test:
+PRINT "Should happen 5 times!"
+
+test-loop:
+LOOP test 5
+
+HALT
+PRINT "Nope!"
+```
+
+</details>
+
+## 💡 Contributing
 
 Contributions are welcome! Please open an issue or submit a pull request. If you want to email us, contact at: sapinyo@proton.me
 
