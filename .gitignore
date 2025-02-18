@@ -1,3 +1,6 @@
+# Matthew's build workflow
+build-compile/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

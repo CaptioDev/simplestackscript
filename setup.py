@@ -5,11 +5,11 @@ with open("README.md", "r") as f:
 
 setup(
     name='simplestackscript',
-    version='0.2.10',
+    version='1.0.0-dev3',
     packages=find_packages(),
     entry_points={
         'console_scripts': [
-            's3 = s3_package.s3:main',
+            'ssharp = ssharp_package.ssharp:main',
         ],
     },
     install_requires=[],
