@@ -1,0 +1,84 @@
+PUSH 16
+PRINT.TOP
+POP
+
+PUSH 2
+PRINT.TOP
+POP
+
+PUSH 2
+PUSH 3
+ADD
+PRINT.TOP
+POP
+
+PUSH 3
+PUSH 2
+SUB
+PRINT.TOP
+POP
+
+PUSH 3
+PUSH 2
+MUL
+PRINT.TOP
+POP
+
+PUSH 4
+PUSH 2
+DIV
+PRINT.TOP
+POP
+
+PRINT "We are testing, bum ba dum ba dum dum daaaa!"
+
+GOTO yes
+HALT
+
+yes:
+PRINT "Yep!"
+
+PUSH 16
+DUP
+PRINT.TOP
+POP
+PRINT.TOP
+POP
+
+PUSH 10
+PUSH 12
+SWAP
+PRINT.TOP
+POP
+PRINT.TOP
+POP
+
+PUSH 1
+PUSH 2
+PUSH 3
+ROT
+PRINT.TOP
+POP
+PRINT.TOP
+POP
+PRINT.TOP
+POP
+
+READ
+PRINT.TOP
+
+GOTO test-loop
+
+test:
+PRINT "Should happen 5 times!"
+
+test-loop:
+LOOP test 5
+
+PRINT "Wait 2 seconds..."
+WAIT 2000
+
+PRINT "Nice!"
+
+HALT
+PRINT "Nope!"
