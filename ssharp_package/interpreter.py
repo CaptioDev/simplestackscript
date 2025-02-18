@@ -71,6 +71,7 @@ def tokenize(program_lines):
 def execute(program, label_tracker):
     stack = Stack()                                                  # Instantiate stack
     pc = 0                                                           # Program counter
+    loop_tracker = {}
 
     def op_push():                                                   # PUSH opcode: Push a number onto the stack
         stack.push(int(program[pc][1]))
@@ -123,6 +124,22 @@ def execute(program, label_tracker):
     def op_goto():                                                   # GOTO opcode: Jump to a label
         nonlocal pc
         pc = label_tracker[program[pc][1]] - 1
+    
+    def op_loop():                                                   # LOOP opcode: Loop a block of code forwarding to a label for a number of times
+        nonlocal pc
+        label = program[pc][1]
+        number = program[pc][2]
+
+        loop_key = f"LOOP-{label}"
+
+        if loop_key not in loop_tracker:
+            loop_tracker[loop_key] = int(number)
+        
+        if loop_tracker[loop_key] > 0:
+            loop_tracker[loop_key] -= 1
+            pc = label_tracker[label] - 1
+        else:
+            del loop_tracker[loop_key]
 
     def op_halt():                                                   # HALT opcode: Stop execution
         return 16
@@ -144,6 +161,7 @@ def execute(program, label_tracker):
         "PRINT.TOP": op_printtop,
 
         "GOTO": op_goto,
+        "LOOP": op_loop,
 
         "HALT": op_halt,
     }
