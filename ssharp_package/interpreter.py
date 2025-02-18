@@ -116,6 +116,9 @@ def execute(program, label_tracker):
 
     def op_printtop():                                               # PRINT.TOP opcode: Print the top value of the stack
         print(stack.top())
+    
+    def op_read():                                                   # READ opcode: Read a number from the user and push it onto the stack
+        stack.push(int(input()))
 
     def op_goto():                                                   # GOTO opcode: Jump to a label
         nonlocal pc
@@ -137,6 +140,7 @@ def execute(program, label_tracker):
         "DIV": op_div,
 
         "PRINT": op_print,
+        "READ": op_read,
         "PRINT.TOP": op_printtop,
 
         "GOTO": op_goto,
