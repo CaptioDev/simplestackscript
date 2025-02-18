@@ -77,6 +77,22 @@ def execute(program, label_tracker):
 
     def op_pop():                                                    # POP opcode: Remove top value from stack
         stack.pop()
+    
+    def op_dup():
+        a = stack.pop()
+        stack.push(a)
+        stack.push(a)
+    
+    def op_swap():
+        a, b = stack.pop(), stack.pop()
+        stack.push(a)
+        stack.push(b)
+    
+    def op_rot():
+        a, b, c = stack.pop(), stack.pop(), stack.pop()
+        stack.push(a)
+        stack.push(b)
+        stack.push(c)
 
     def op_add():                                                    # ADD opcode: Add top two values on stack
         stack.push(stack.pop() + stack.pop())
@@ -111,14 +127,21 @@ def execute(program, label_tracker):
     dispatch = {
         "PUSH": op_push,
         "POP": op_pop,
+        "DUP": op_dup,
+        "SWAP": op_swap,
+        "ROT": op_rot,
+
         "ADD": op_add,
         "SUB": op_sub,
         "MUL": op_mul,
         "DIV": op_div,
+
         "PRINT": op_print,
-        "GOTO": op_goto,
-        "HALT": op_halt,
         "PRINT.TOP": op_printtop,
+
+        "GOTO": op_goto,
+
+        "HALT": op_halt,
     }
 
     while pc < len(program):                                         # Execution loop
