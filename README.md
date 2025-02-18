@@ -5,9 +5,6 @@ S# (Simple Stack Script) is a lightweight, stack-based programming language desi
 
 ## Important: We are now an officially published Python package!!!
 
-> [!CAUTION]
-> You are currently on the experimental branch of S#. We are currently testing new syntax for the language and you might come accross various issues and bugs. We recommend you switch to the main branch.
-
 ## 🚀 Features
 
 -   **Stack-Based Execution:** Operates on a Last-In-First-Out (LIFO) stack.
